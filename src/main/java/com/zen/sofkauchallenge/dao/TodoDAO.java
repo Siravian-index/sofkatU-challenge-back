@@ -5,6 +5,8 @@ import com.zen.sofkauchallenge.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class TodoDAO implements ITodoDAO{
 
@@ -29,4 +31,10 @@ public class TodoDAO implements ITodoDAO{
     public void deleteTodo(Long id) {
         todoRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<Todo> findById(Long id) {
+        return todoRepository.findById(id);
+    }
+
 }

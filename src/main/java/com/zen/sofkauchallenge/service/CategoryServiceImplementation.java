@@ -19,12 +19,12 @@ public class CategoryServiceImplementation implements ICategoryService {
 
     @Override
     public List<Category> getAllCategories() {
-        return null;
+        return categoryDAO.getAllCategories();
     }
 
     @Override
     public Category createCategory(Category category) {
-        return null;
+        return categoryDAO.createCategory(category);
     }
 
     @Override

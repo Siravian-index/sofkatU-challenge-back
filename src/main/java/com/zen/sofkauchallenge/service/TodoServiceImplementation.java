@@ -5,6 +5,8 @@ import com.zen.sofkauchallenge.entity.Todo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class TodoServiceImplementation implements ITodoService {
     private final TodoDAO todoDAO;
@@ -16,16 +18,21 @@ public class TodoServiceImplementation implements ITodoService {
 
     @Override
     public Todo addTodo(Todo todo) {
-        return null;
+//        Add business logic
+        return todoDAO.addTodo(todo);
     }
 
     @Override
     public Todo updateTodo(Todo todo) {
-        return null;
+//        Add business logic
+        return todoDAO.updateTodo(todo);
     }
 
     @Override
     public Boolean deleteTodo(Long id) {
-        return null;
+        Optional<Todo> optionalTodo = todoDAO.findById(id);
+        Todo todo = optionalTodo.orElseThrow();
+        todoDAO.deleteTodo(todo.getId());
+        return true;
     }
 }
