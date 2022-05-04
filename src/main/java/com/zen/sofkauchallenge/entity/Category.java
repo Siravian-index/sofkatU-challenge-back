@@ -17,16 +17,9 @@ public class Category {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Todo> todoList = new ArrayList<>();
 
-    public Boolean addTodo(Todo todo) {
-        Boolean todoIntegrity = validateTodoIntegrity(todo);
-        if (todoIntegrity) {
-            this.todoList.add(todo);
-            return true;
-        }
-        return false;
+    public Category addTodo(Todo todo) {
+        this.todoList.add(todo);
+        return this;
     }
 
-    private Boolean validateTodoIntegrity(Todo todo) {
-        return todo != null && todo.getTitle() != null && todo.getTitle().length() > 0;
-    }
 }

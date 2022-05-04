@@ -22,19 +22,25 @@ public class TodoServiceImplementation implements ITodoService {
 
     @Override
     public Todo addTodo(Todo todo) {
-//        Validate to-do!!
-        Optional<Category> categoryOptional = categoryDAO.findById(todo.getCategoryFK());
-        Category category = categoryOptional.orElseThrow();
-        category.addTodo(todo);
-        categoryDAO.saveCategory(category);
-        return todoDAO.saveTodo(todo);
+        Boolean todoIntegrity = validateTodoIntegrity(todo);
+        if (todoIntegrity) {
+            Optional<Category> categoryOptional = categoryDAO.findById(todo.getCategoryFK());
+            Category category = categoryOptional.orElseThrow();
+            category.addTodo(todo);
+            categoryDAO.saveCategory(category);
+            return todoDAO.saveTodo(todo);
+        }
+        return null;
     }
 
 
     @Override
     public Todo updateTodo(Todo todo) {
-//        Validate to-do!!
-        return todoDAO.updateTodo(todo);
+        Boolean todoIntegrity = validateTodoIntegrity(todo);
+        if (todoIntegrity) {
+            return todoDAO.updateTodo(todo);
+        }
+        return null;
     }
 
     @Override
@@ -43,5 +49,11 @@ public class TodoServiceImplementation implements ITodoService {
         Todo todo = optionalTodo.orElseThrow();
         todoDAO.deleteTodo(todo.getId());
         return true;
+    }
+
+    private Boolean validateTodoIntegrity(Todo todo) {
+       Boolean correctTitle =  todo != null && todo.getTitle() != null && todo.getTitle().length() > 0;
+       Boolean validIsDone = todo != null && todo.getIsDone() != null;
+       return correctTitle && validIsDone;
     }
 }
