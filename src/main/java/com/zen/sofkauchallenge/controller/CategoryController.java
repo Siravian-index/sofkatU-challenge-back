@@ -3,6 +3,8 @@ package com.zen.sofkauchallenge.controller;
 import com.zen.sofkauchallenge.entity.Category;
 import com.zen.sofkauchallenge.service.CategoryServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,13 +26,22 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Category createCategory(@RequestBody Category category) {
-        return categoryService.createCategory(category);
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+        Category categoryCreated = categoryService.createCategory(category);
+        if (categoryCreated != null) {
+//           return status 201
+            return new ResponseEntity<>(categoryCreated, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/{id}")
-    public Boolean deleteCategory(@PathVariable Long id) {
-        return categoryService.deleteCategory(id);
+    public ResponseEntity<Boolean> deleteCategory(@PathVariable Long id) {
+        Boolean deleted = categoryService.deleteCategory(id);
+        if (deleted) {
+            return new ResponseEntity<>(deleted, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(deleted, HttpStatus.NOT_FOUND);
     }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,20 +26,20 @@ public class CategoryServiceImplementation implements ICategoryService {
 
     @Override
     public Category createCategory(Category category) {
-//        handle the case where the client does not send a title attribute
-        if (category.getTitle() != null) {
+        if (category.getTitle() != null && !Objects.equals(category.getTitle(), "")) {
             return categoryDAO.createCategory(category);
         }
-//        return something better
         return null;
     }
 
     @Override
     public Boolean deleteCategory(Long id) {
-//        make sure it returns something useful when it does not find an id
         Optional<Category> optionalCategory = categoryDAO.findById(id);
-        Category category = optionalCategory.orElseThrow();
-        categoryDAO.deleteCategory(category.getId());
-        return true;
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            categoryDAO.deleteCategory(category.getId());
+            return true;
+        }
+        return false;
     }
 }

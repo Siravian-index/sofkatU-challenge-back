@@ -33,14 +33,12 @@ public class TodoServiceImplementation implements ITodoService {
 
     @Override
     public Todo updateTodo(Todo todo) {
-//        Add business logic
 //        Validate to-do!!
         return todoDAO.updateTodo(todo);
     }
 
     @Override
     public Boolean deleteTodo(Long id) {
-//        remove this to-do from the category list
         Optional<Todo> optionalTodo = todoDAO.findById(id);
         Todo todo = optionalTodo.orElseThrow();
         todoDAO.deleteTodo(todo.getId());
