@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImplementation implements ICategoryService {
@@ -29,6 +30,9 @@ public class CategoryServiceImplementation implements ICategoryService {
 
     @Override
     public Boolean deleteCategory(Long id) {
-        return null;
+        Optional<Category> optionalCategory = categoryDAO.findById(id);
+        Category category = optionalCategory.orElseThrow();
+        categoryDAO.deleteCategory(category.getId());
+        return true;
     }
 }
