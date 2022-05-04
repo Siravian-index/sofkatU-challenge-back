@@ -22,10 +22,12 @@ public class TodoServiceImplementation implements ITodoService {
 
     @Override
     public Todo addTodo(Todo todo) {
-        Boolean todoIntegrity = validateTodoIntegrity(todo);
-        if (todoIntegrity) {
-            Optional<Category> categoryOptional = categoryDAO.findById(todo.getCategoryFK());
-            Category category = categoryOptional.orElseThrow();
+        boolean todoIntegrity = validateTodoIntegrity(todo);
+        System.out.println("todo i " + todoIntegrity);
+        Optional<Category> categoryOptional = categoryDAO.findById(todo.getCategoryFK());
+        System.out.println("optional: " + categoryOptional);
+        if (todoIntegrity && categoryOptional.isPresent()) {
+            Category category = categoryOptional.get();
             category.addTodo(todo);
             categoryDAO.saveCategory(category);
             return todoDAO.saveTodo(todo);
@@ -36,7 +38,7 @@ public class TodoServiceImplementation implements ITodoService {
 
     @Override
     public Todo updateTodo(Todo todo) {
-        Boolean todoIntegrity = validateTodoIntegrity(todo);
+        boolean todoIntegrity = validateTodoIntegrity(todo);
         if (todoIntegrity) {
             return todoDAO.updateTodo(todo);
         }
@@ -44,16 +46,17 @@ public class TodoServiceImplementation implements ITodoService {
     }
 
     @Override
-    public Boolean deleteTodo(Long id) {
+    public boolean deleteTodo(Long id) {
         Optional<Todo> optionalTodo = todoDAO.findById(id);
-        Todo todo = optionalTodo.orElseThrow();
-        todoDAO.deleteTodo(todo.getId());
-        return true;
+        if (optionalTodo.isPresent()) {
+            Todo todo = optionalTodo.get();
+            todoDAO.deleteTodo(todo.getId());
+            return true;
+        }
+        return false;
     }
 
-    private Boolean validateTodoIntegrity(Todo todo) {
-       Boolean correctTitle =  todo != null && todo.getTitle() != null && todo.getTitle().length() > 0;
-       Boolean validIsDone = todo != null && todo.getIsDone() != null;
-       return correctTitle && validIsDone;
+    private boolean validateTodoIntegrity(Todo todo) {
+        return todo != null && todo.getTitle() != null && todo.getTitle().length() > 0;
     }
 }

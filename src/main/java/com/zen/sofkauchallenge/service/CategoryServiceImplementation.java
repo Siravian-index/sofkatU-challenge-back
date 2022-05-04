@@ -33,7 +33,7 @@ public class CategoryServiceImplementation implements ICategoryService {
     }
 
     @Override
-    public Boolean deleteCategory(Long id) {
+    public boolean deleteCategory(Long id) {
         Optional<Category> optionalCategory = categoryDAO.findById(id);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();

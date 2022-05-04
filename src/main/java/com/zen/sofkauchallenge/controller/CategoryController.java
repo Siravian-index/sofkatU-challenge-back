@@ -32,12 +32,12 @@ public class CategoryController {
 //           return status 201
             return new ResponseEntity<>(categoryCreated, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteCategory(@PathVariable Long id) {
-        Boolean deleted = categoryService.deleteCategory(id);
+        boolean deleted = categoryService.deleteCategory(id);
         if (deleted) {
             return new ResponseEntity<>(deleted, HttpStatus.OK);
         }

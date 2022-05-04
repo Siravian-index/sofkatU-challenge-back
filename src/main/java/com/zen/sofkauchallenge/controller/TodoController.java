@@ -3,6 +3,9 @@ package com.zen.sofkauchallenge.controller;
 import com.zen.sofkauchallenge.entity.Todo;
 import com.zen.sofkauchallenge.service.TodoServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,18 +20,31 @@ public class TodoController {
     }
 
     @PostMapping
-    public Todo createTodo(@RequestBody Todo todo) {
-        return todoService.addTodo(todo);
+    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo) {
+        Todo todoCreated = todoService.addTodo(todo);
+        if (todoCreated != null) {
+//            201
+            return new ResponseEntity<>(todoCreated, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping
-    public Todo updateTodo(@RequestBody Todo todo) {
-        return todoService.updateTodo(todo);
+    public ResponseEntity<Todo> updateTodo(@RequestBody Todo todo) {
+        Todo todoUpdated = todoService.updateTodo(todo);
+        if (todoUpdated != null) {
+            return new ResponseEntity<>(todoUpdated, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/{id}")
-    public Boolean deleteTodo(@PathVariable Long id) {
-        return todoService.deleteTodo(id);
+    public ResponseEntity<Boolean> deleteTodo(@PathVariable Long id) {
+        Boolean wasDeleted = todoService.deleteTodo(id);
+        if (wasDeleted) {
+            return new ResponseEntity<>(wasDeleted, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(wasDeleted, HttpStatus.NOT_FOUND);
     }
 
 }
