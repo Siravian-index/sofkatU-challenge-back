@@ -26,7 +26,7 @@ public class TodoDAO implements ITodoDAO{
     }
 
     @Override
-    public void deleteTodo(Todo todo) {
-        todoRepository.deleteById(todo.getId());
+    public void deleteTodo(Long id) {
+        todoRepository.deleteById(id);
     }
 }
