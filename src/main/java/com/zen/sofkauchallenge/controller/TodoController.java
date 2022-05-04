@@ -40,7 +40,7 @@ public class TodoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteTodo(@PathVariable Long id) {
-        Boolean wasDeleted = todoService.deleteTodo(id);
+        boolean wasDeleted = todoService.deleteTodo(id);
         if (wasDeleted) {
             return new ResponseEntity<>(wasDeleted, HttpStatus.OK);
         }
