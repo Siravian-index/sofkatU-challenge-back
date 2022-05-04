@@ -25,11 +25,17 @@ public class CategoryServiceImplementation implements ICategoryService {
 
     @Override
     public Category createCategory(Category category) {
-        return categoryDAO.createCategory(category);
+//        handle the case where the client does not send a title attribute
+        if (category.getTitle() != null) {
+            return categoryDAO.createCategory(category);
+        }
+//        return something better
+        return null;
     }
 
     @Override
     public Boolean deleteCategory(Long id) {
+//        make sure it returns something useful when it does not find an id
         Optional<Category> optionalCategory = categoryDAO.findById(id);
         Category category = optionalCategory.orElseThrow();
         categoryDAO.deleteCategory(category.getId());

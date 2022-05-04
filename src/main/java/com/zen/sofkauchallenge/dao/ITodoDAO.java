@@ -9,4 +9,6 @@ public interface ITodoDAO {
     Todo updateTodo(Todo todo);
     void deleteTodo(Long id);
     Optional<Todo> findById(Long id);
+
+    Todo saveTodo(Todo todo);
 }

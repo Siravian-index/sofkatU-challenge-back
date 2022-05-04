@@ -37,4 +37,9 @@ public class TodoDAO implements ITodoDAO{
         return todoRepository.findById(id);
     }
 
+    @Override
+    public Todo saveTodo(Todo todo) {
+        return todoRepository.save(todo);
+    }
+
 }

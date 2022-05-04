@@ -10,4 +10,6 @@ public interface ICategoryDAO {
     Category createCategory(Category category);
     void deleteCategory(Long id);
     Optional<Category> findById(Long id);
+
+    Category saveCategory(Category category);
 }
