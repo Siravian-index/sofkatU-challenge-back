@@ -7,5 +7,5 @@ import java.util.List;
 public interface ICategoryDAO {
     List<Category> getAllCategories();
     Category createCategory(Category category);
-    Boolean deleteCategory(Long id);
+    void deleteCategory(Long id);
 }
