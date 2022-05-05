@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/categories")
+@CrossOrigin(origins = "http://localhost:3000/")
 public class CategoryController {
 
     private final CategoryServiceImplementation categoryService;
@@ -37,11 +38,11 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteCategory(@PathVariable Long id) {
-        boolean deleted = categoryService.deleteCategory(id);
-        if (deleted) {
-            return new ResponseEntity<>(deleted, HttpStatus.OK);
+        boolean wasDeleted = categoryService.deleteCategory(id);
+        if (wasDeleted) {
+            return new ResponseEntity<>(wasDeleted, HttpStatus.OK);
         }
-        return new ResponseEntity<>(deleted, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(wasDeleted, HttpStatus.NOT_FOUND);
     }
 
 }
