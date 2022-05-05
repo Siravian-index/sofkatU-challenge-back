@@ -21,14 +21,14 @@ public class TodoServiceImplementation implements ITodoService {
     }
 
     @Override
-    public Todo addTodo(Todo todo) {
+    public Category addTodo(Todo todo) {
         boolean todoIntegrity = validateTodoIntegrity(todo);
         Optional<Category> categoryOptional = categoryDAO.findById(todo.getCategoryFK());
         if (todoIntegrity && categoryOptional.isPresent()) {
             Category category = categoryOptional.get();
             category.addTodo(todo);
-            categoryDAO.saveCategory(category);
-            return todoDAO.saveTodo(todo);
+            todoDAO.saveTodo(todo);
+            return categoryDAO.saveCategory(category);
         }
         return null;
     }
@@ -36,7 +36,6 @@ public class TodoServiceImplementation implements ITodoService {
 
     @Override
     public Todo updateTodo(Todo todo) {
-//        it is acting funky
         boolean todoIntegrity = validateTodoIntegrity(todo);
         if (todoIntegrity) {
             return todoDAO.updateTodo(todo);

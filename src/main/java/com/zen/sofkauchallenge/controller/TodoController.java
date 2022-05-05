@@ -1,5 +1,6 @@
 package com.zen.sofkauchallenge.controller;
 
+import com.zen.sofkauchallenge.entity.Category;
 import com.zen.sofkauchallenge.entity.Todo;
 import com.zen.sofkauchallenge.service.TodoServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ public class TodoController {
     }
 
     @PostMapping
-    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo) {
-        Todo todoCreated = todoService.addTodo(todo);
+    public ResponseEntity<Category> createTodo(@RequestBody Todo todo) {
+        Category todoCreated = todoService.addTodo(todo);
         if (todoCreated != null) {
 //            201
             return new ResponseEntity<>(todoCreated, HttpStatus.CREATED);
