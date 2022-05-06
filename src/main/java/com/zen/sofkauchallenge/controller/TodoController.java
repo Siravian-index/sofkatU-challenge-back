@@ -9,7 +9,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Map;
+
+import static com.zen.sofkauchallenge.controller.CategoryController.getStringStringMap;
 
 @RestController
 @RequestMapping("api/v1/todos")
@@ -26,28 +32,27 @@ public class TodoController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> createTodo(@RequestBody TodoDTO todoDTO) {
-//        convert to dto
+    public ResponseEntity<CategoryDTO> createTodo(@Valid @RequestBody TodoDTO todoDTO) {
         Todo postTodo = modelMapper.map(todoDTO, Todo.class);
         Category todoCreated = todoService.addTodo(postTodo);
         if (todoCreated != null) {
-//            convert entity to DTO
             CategoryDTO postResponse = modelMapper.map(todoCreated, CategoryDTO.class);
             return new ResponseEntity<>(postResponse, HttpStatus.CREATED);
         }
+        System.out.println("custom validation");
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping
-    public ResponseEntity<TodoDTO> updateTodo(@RequestBody TodoDTO todoDTO) {
-//        convert DTO to entity
+    public ResponseEntity<TodoDTO> updateTodo(@Valid @RequestBody TodoDTO todoDTO) {
         Todo putTodo = modelMapper.map(todoDTO, Todo.class);
         Todo todoUpdated = todoService.updateTodo(putTodo);
         if (todoUpdated != null) {
-//            convert entity to DTO
             TodoDTO putResponse = modelMapper.map(todoUpdated, TodoDTO.class);
             return new ResponseEntity<>(putResponse, HttpStatus.OK);
         }
+        System.out.println("custom validation");
+
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -55,9 +60,16 @@ public class TodoController {
     public ResponseEntity<Boolean> deleteTodo(@PathVariable Long id) {
         boolean wasDeleted = todoService.deleteTodo(id);
         if (wasDeleted) {
-            return new ResponseEntity<>(wasDeleted, HttpStatus.OK);
+            return new ResponseEntity<>(true, HttpStatus.OK);
         }
-        return new ResponseEntity<>(wasDeleted, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        return getStringStringMap(ex);
     }
 
 }
