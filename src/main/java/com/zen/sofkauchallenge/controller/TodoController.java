@@ -1,8 +1,11 @@
 package com.zen.sofkauchallenge.controller;
 
+import com.zen.sofkauchallenge.dto.CategoryDTO;
+import com.zen.sofkauchallenge.dto.TodoDTO;
 import com.zen.sofkauchallenge.entity.Category;
 import com.zen.sofkauchallenge.entity.Todo;
 import com.zen.sofkauchallenge.service.TodoServiceImplementation;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,27 +17,36 @@ import org.springframework.web.bind.annotation.*;
 public class TodoController {
 
     private final TodoServiceImplementation todoService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public TodoController(TodoServiceImplementation todoService) {
+    public TodoController(TodoServiceImplementation todoService, ModelMapper modelMapper) {
         this.todoService = todoService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping
-    public ResponseEntity<Category> createTodo(@RequestBody Todo todo) {
-        Category todoCreated = todoService.addTodo(todo);
+    public ResponseEntity<CategoryDTO> createTodo(@RequestBody TodoDTO todoDTO) {
+//        convert to dto
+        Todo postTodo = modelMapper.map(todoDTO, Todo.class);
+        Category todoCreated = todoService.addTodo(postTodo);
         if (todoCreated != null) {
-//            201
-            return new ResponseEntity<>(todoCreated, HttpStatus.CREATED);
+//            convert entity to DTO
+            CategoryDTO postResponse = modelMapper.map(todoCreated, CategoryDTO.class);
+            return new ResponseEntity<>(postResponse, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping
-    public ResponseEntity<Todo> updateTodo(@RequestBody Todo todo) {
-        Todo todoUpdated = todoService.updateTodo(todo);
+    public ResponseEntity<TodoDTO> updateTodo(@RequestBody TodoDTO todoDTO) {
+//        convert DTO to entity
+        Todo putTodo = modelMapper.map(todoDTO, Todo.class);
+        Todo todoUpdated = todoService.updateTodo(putTodo);
         if (todoUpdated != null) {
-            return new ResponseEntity<>(todoUpdated, HttpStatus.OK);
+//            convert entity to DTO
+            TodoDTO putResponse = modelMapper.map(todoUpdated, TodoDTO.class);
+            return new ResponseEntity<>(putResponse, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
